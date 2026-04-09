@@ -51,18 +51,24 @@ public class GetDailyForcastEndpoint : IEndpoint
                     .AddTimeout(TimeSpan.FromSeconds(RequestTimeoutSec))
                     .Build();
 
-                Result<ForcastModel> result = await forcastClient.GetAsync(query, linkedSource.Token);
-                //await resiliencyPipe.ExecuteAsync(
-                //    async cancel => await cache.GetOrCreateAsync(
-                //                query.ToString(), 
-                //                async ct => await forcastClient.GetAsync(query, linkedSource.Token),
-                //                null, null,
-                //                cancel),
-                //    linkedSource.Token);
+                ForcastModel? forcast =
+                await resiliencyPipe.ExecuteAsync(
+                    async cancel => await cache.GetOrCreateAsync(
+                        query.ToString(),
+                        async ct =>
+                        {
+                            Result<ForcastModel> result = await forcastClient.GetAsync(query, linkedSource.Token);
 
-                return result.IsSuccess
-                    ? Results.Ok(result.Value)
-                    : Results.BadRequest(result.Error);
+                            return result.IsSuccess 
+                                ? result.Value
+                                : ErrorDetails.NotFound.Equals(result.Error)
+                                    ? null
+                                    : throw new InvalidOperationException(result.Error.Message);
+                        },
+                        null, null, cancel),
+                    linkedSource.Token);               
+
+                return forcast is not null ? Results.Ok(forcast) : Results.NotFound();
             })
             .WithName("GetDailyWeatherForecast");
 }
