@@ -1,0 +1,47 @@
+{
+  "location": {
+    "name": "Lon",
+    "region": "Cantabria",
+    "country": "Spain",
+    "lat": 43.1667,
+    "lon": -4.6833,
+    "tz_id": "Europe/Madrid",
+    "localtime_epoch": 1774892687,
+    "localtime": "2026-03-30 19:44"
+  },
+  "current": {
+    "last_updated_epoch": 1774891800,
+    "last_updated": "2026-03-30 19:30",
+    "temp_c": 5.3,
+    "temp_f": 41.6,
+    "is_day": 1,
+    "condition": {
+      "text": "Mist",
+      "icon": "//cdn.weatherapi.com/weather/64x64/day/143.png",
+      "code": 1030
+    },
+    "wind_mph": 5.8,
+    "wind_kph": 9.4,
+    "wind_degree": 331,
+    "wind_dir": "NNW",
+    "pressure_mb": 1032.0,
+    "pressure_in": 30.48,
+    "precip_mm": 0.02,
+    "precip_in": 0.0,
+    "humidity": 95,
+    "cloud": 100,
+    "feelslike_c": 3.2,
+    "feelslike_f": 37.8,
+    "windchill_c": 3.2,
+    "windchill_f": 37.8,
+    "heatindex_c": 5.3,
+    "heatindex_f": 41.6,
+    "dewpoint_c": 4.6,
+    "dewpoint_f": 40.3,
+    "vis_km": 2.0,
+    "vis_miles": 1.0,
+    "uv": 0.2,
+    "gust_mph": 8.2,
+    "gust_kph": 13.2
+  }
+}
