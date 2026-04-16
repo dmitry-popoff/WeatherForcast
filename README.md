@@ -2,7 +2,7 @@
 
 ## Run back-end
 
-1. Navigate to 'weather-forcast' folder, containing docer-compose.yaml file.
+1. Navigate to 'weather-forcast' folder, containing docker-compose.yaml file.
 2. Execute command: docker compose up
 
 Run with env:Development or apply cert for SSL. this is common problem for back-end when using certs for SSL.
