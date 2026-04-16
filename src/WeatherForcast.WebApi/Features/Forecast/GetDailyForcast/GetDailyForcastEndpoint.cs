@@ -67,3 +67,4 @@ public class GetDailyForcastEndpoint : IEndpoint
             .RequireCors("AllowAll");
 }
 
+
