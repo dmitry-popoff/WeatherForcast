@@ -18,15 +18,6 @@ public record struct Request(
     public const int DefaultDays = 3;
 }
 
-public record Response(ForcastModel? Forcast = default, ErrorDetails? Error = default)
-{
-    public static Response Success(ForcastModel forcast) => new Response(forcast, null);
-    public static Response Failure(ErrorDetails error) => new Response(null, error);
-
-    public static implicit operator Response(ForcastModel forcast) => Success(forcast);
-    public static implicit operator Response(ErrorDetails error) => Failure(error);
-}
-
 public class GetDailyForcastEndpoint : IEndpoint
 {
     private const int RequestTimeoutSec = 20;
