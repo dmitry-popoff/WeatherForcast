@@ -29,7 +29,7 @@ public class GetCurrentWeatherEndpoint : IEndpoint
                 Result<CurrentWeather> result = await forcastClient.GetAsync(query, cancellationToken);
 
                 return result.IsSuccess
-                    ? Results.Ok(result.Value.Success())
+                    ? Results.Ok(result.Value.ToResponse())
                     : Results.BadRequest(result.Error.ToResponse());
             })
             .WithName("GetCurrentWeatherForecast")

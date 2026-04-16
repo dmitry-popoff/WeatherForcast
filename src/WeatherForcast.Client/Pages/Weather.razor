@@ -22,8 +22,10 @@
     
 </div>
 @code{
+    @inject NavigationManager Navigation
+
     private void HandleReload()
     {
-        OnInitialized();
+        Navigation.NavigateTo("/weather", forceLoad: true);
     }
 }
