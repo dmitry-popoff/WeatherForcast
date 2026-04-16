@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using WeatherForcast.Models;
 
 namespace WeatherForcast.WebApi.Middleware;
 
@@ -22,17 +22,16 @@ internal sealed class OperationCancelledExceptionHandler : IExceptionHandler
         _logger.LogError(
             exception, "Exception occurred: {Message}", exception.Message);
 
-        var problemDetails = new ProblemDetails
-        {
-            Status = StatusCodes.Status408RequestTimeout,
-            Title = "Operation cancelled",
-            Detail = "Operation was cancelled"
-        };
+        var problemDetails = new ErrorDetails
+        (
+            "Operation was cancelled",
+            StatusCodes.Status408RequestTimeout.ToString()
+        );
 
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        httpContext.Response.StatusCode = StatusCodes.Status408RequestTimeout;
 
         await httpContext.Response
-            .WriteAsJsonAsync(problemDetails, cancellationToken);
+            .WriteAsJsonAsync(problemDetails.ToResponse(), cancellationToken);
 
         return true;
     }

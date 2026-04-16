@@ -1,0 +1,6 @@
+services:
+  weatherforcast.webapi:
+    image: ${DOCKER_REGISTRY-}weatherforcastwebapi
+    build:
+      context: .
+      dockerfile: src/WeatherForcast.WebApi/Dockerfile

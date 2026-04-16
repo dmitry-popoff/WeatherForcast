@@ -1,0 +1,29 @@
+﻿@using WeatherForcast.Models.Forcast
+
+    <!-- Horizontal List -->
+    <ul class="list-group list-group-horizontal mb-3">
+        @foreach (var hourly in ForcastModels)
+        {
+            <li class="list-group-item flex-fill" style="background: transparent; border-radius: 15px;">
+                <div class="card bg-light flex-fill text-white  border-black" style="border-radius: 40px;">
+                    <div class="bg-image flex-fill" style="border-radius: 35px;">
+                        <img src="@hourly.Condition.Icon"
+                             class="card-img" alt="weather" />
+                        <div class="mask" style="background-color: rgba(190, 216, 232, .5);"></div>
+                    </div>
+                    <div class="card-img-overlay  text-dark flex-fill">
+                        <p class="fw-bold mb-0">@hourly.Time.Hour:00</p>
+                        <i class="bi bi-cloud-sun fs-4"></i>
+                    <p class="fw-bold mb-0">@((int)hourly.TemperatureCelsius)°/@((int)hourly.FeelslikeCelsius)°</p>
+                    </div>
+                </div>
+            </li>
+        }
+
+    </ul>
+
+
+@code {
+    [CascadingParameter]
+    public WeatherForcastModel[] ForcastModels { get; set; } = [];
+}

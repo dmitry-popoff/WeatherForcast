@@ -1,0 +1,48 @@
+﻿@using Blazing.Mvvm.Components
+@using WeatherForcast.Client.ViewModels.Forecasts.FetchCurrentWeather
+@inherits MvvmOwningComponentBase<FetchDailyForcastViewModel>
+
+<PageTitle>@ViewModel.Title</PageTitle>
+
+<h1>@ViewModel?.Forcast?.Location.Country, @ViewModel?.Forcast?.Location.Region</h1>
+
+@if (ViewModel.Forcast is null)
+{
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+    <div>
+        <p><em>Loading...</em></p>
+    </div>
+}
+else
+{
+     <section class="vh-100" style="background: transparent ;">
+        <div class="container py-2 h-100">
+                
+            <div class="row  d-flex justify-content-center align-items-center ">
+                <div class="col-md-10 col-lg-8 col-xl-6 ">
+            <CascadingValue Value="@ViewModel.Forcast">
+        @ChildContent
+    </CascadingValue>
+                    </div>
+                <div class="col-md-10 col-lg-8 col-xl-6 ">
+            <CascadingValue Value="@ViewModel.Forcast">
+                <DayForcast />
+            </CascadingValue>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+    [Parameter]
+    public RenderFragment DayForcastContent { get; set; } = default!;
+}

@@ -1,0 +1,134 @@
+﻿@using WeatherForcast.Models.Forcast
+
+@if (Forcast is not null)
+{
+    <div class="card shadow-sm mx-auto flex-fill" style="background: transparent; border-radius: 15px;">
+        <CascadingValue Value=@CurrentDailyForcast>
+            <Forcast/>
+        </CascadingValue>
+    </div>
+    <div class="card shadow-sm mx-auto flex-fill" style="background: transparent; border-radius: 15px;">
+        <CascadingValue Value=@ForcastModels>
+            <HourlyForcastList />
+       </CascadingValue>
+    </div>
+
+    <div class="row flex-fill">
+        <div class="col justify-content-start">
+            <button type="button" active="@CanMoveBack" class="btn btn-dark" @onclick="HandlePrev">
+                Prev
+            </button>
+        </div>
+        <div class="col justify-content-end">
+            <button type="button" active="@CanMoveFwd" class="btn btn-dark" @onclick="HandleNext">
+                Next
+            </button>
+        </div>
+    </div>
+
+}
+@code {
+    [CascadingParameter]
+    public ForcastModel Forcast { get; set; } = default!;
+    [CascadingParameter]
+    private DailyWeatherForcast CurrentDailyForcast { get; set; } = default!;    
+    [CascadingParameter]
+    public WeatherForcastModel[] ForcastModels { get; set; } = [];
+
+    private WeatherForcastModel[] _forcastDatas { get; set; } = [];
+
+    private DateOnly[] _dates = [];
+    private DateOnly _currentDate; 
+
+    private int _hourlyCursor = 0;
+    private int _hourlyLength = 4;
+    private bool CanMoveFwd => _hourlyCursor < _forcastDatas.Length  - _hourlyLength;
+    private bool CanMoveBack => _hourlyCursor >= 0;
+    private CursorDirection _moveDirection = CursorDirection.Fwd;
+    private enum CursorDirection: byte { Fwd = 0, Back = 1 }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        CurrentDailyForcast = Forcast.Daily.Values.First();
+
+        _forcastDatas = Forcast.Daily.Values
+            .SelectMany(d => d.Hourly.Values)
+            .Where(f => f.Time >= Forcast.CurrentWeather.Time)
+            .ToArray();
+
+        ForcastModels = _forcastDatas.AsSpan().Slice(_hourlyCursor, _hourlyLength).ToArray();
+
+        _dates = Forcast.Daily.Keys.OrderBy(x => x).ToArray();
+
+        StateHasChanged();
+    }
+
+    private void HandlePrev() => HandlePrevImpl();
+
+    private void HandlePrevImpl()
+    {
+        if (DecrementCursor() is false) return;
+
+        if (_hourlyCursor < 4 && _hourlyCursor > 0) _hourlyCursor = 0;
+
+        if (CanMoveBack is false) return;
+
+        ForcastModels = _forcastDatas.AsSpan().Slice(_hourlyCursor, _hourlyLength).ToArray();
+
+        _moveDirection = CursorDirection.Back;
+
+        HandleCurrentForcast();
+    }
+
+    private bool DecrementCursor()
+    {
+        if (CanMoveBack is false) return false;
+
+        _hourlyCursor -= _hourlyLength;
+
+        return true;
+    }
+
+    private void HandleNext() => HandleNextImpl();
+
+    private void HandleNextImpl()
+    {
+        if (IncrementCursor() is false) return;
+
+        if (_hourlyCursor < _forcastDatas.Length && _hourlyCursor > _forcastDatas.Length - 1 - _hourlyLength)
+        {
+            _hourlyCursor = _forcastDatas.Length  - _hourlyLength;
+        }
+
+        ForcastModels = _forcastDatas.AsSpan().Slice(_hourlyCursor, _hourlyLength).ToArray();
+
+        _moveDirection = CursorDirection.Fwd;
+
+        HandleCurrentForcast();
+    }
+
+    private bool IncrementCursor()
+    {
+        if (CanMoveFwd is false) return false;
+
+        _hourlyCursor += _hourlyLength;
+
+        return true;
+    }
+
+    private void HandleCurrentForcast()
+    {
+        if (ForcastModels.Any(f => f.Time.Day != CurrentDailyForcast.Date.Day) is false) return;
+
+        var timeQuery = ForcastModels.Select(f => f.Time);
+
+        _currentDate = DateOnly.FromDateTime(
+            _moveDirection == CursorDirection.Fwd 
+                ? timeQuery.Max() : timeQuery.Min());
+
+        CurrentDailyForcast = Forcast.Daily[_currentDate];
+    }
+}
+

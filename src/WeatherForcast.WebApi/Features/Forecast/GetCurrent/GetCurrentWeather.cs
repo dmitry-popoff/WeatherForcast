@@ -15,15 +15,6 @@ public record struct Request(
     public const decimal DefaultLongitude = 37.6184M;
 }
 
-public record Response(CurrentWeather? Forcast = default, ErrorDetails? Error = default)
-{
-    public static Response Success(CurrentWeather forcast) => new Response(forcast, null);
-    public static Response Failure(ErrorDetails error) => new Response(null, error);
-
-    public static implicit operator Response(CurrentWeather forcast) => Success(forcast);
-    public static implicit operator Response(ErrorDetails error) => Failure(error);
-}
-
 public class GetCurrentWeatherEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app) => app.MapGet("forcast/current",
@@ -38,8 +29,9 @@ public class GetCurrentWeatherEndpoint : IEndpoint
                 Result<CurrentWeather> result = await forcastClient.GetAsync(query, cancellationToken);
 
                 return result.IsSuccess
-                    ? Results.Ok(result.Value)
-                    : Results.BadRequest(result.Error);
+                    ? Results.Ok(result.Value.Success())
+                    : Results.BadRequest(result.Error.ToResponse());
             })
-            .WithName("GetCurrentWeatherForecast");
+            .WithName("GetCurrentWeatherForecast")
+            .RequireCors("AllowAll");
 }

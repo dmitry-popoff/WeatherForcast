@@ -6,6 +6,16 @@ using WeatherForcast.WebApi.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.AddLogging();
 
 builder.Services.AddApiVersioning(options =>
@@ -32,6 +42,8 @@ builder.Services.AddHttpClients(builder.Configuration);
 
 builder.Services.AddEndpoints(typeof(Program).Assembly);
 
+builder.Services.AddAntiforgery();
+
 var app = builder.Build();
 
 app.UseExceptionHandler();
@@ -44,6 +56,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAntiforgery();
+
+app.UseCors("AllowAll");
 
 app.UseRateLimiter();
 
