@@ -69,7 +69,7 @@ public class GetDailyForcastEndpoint : IEndpoint
                     linkedSource.Token);               
 
                 return forcast is not null 
-                    ? Results.Ok(forcast.Success()) 
+                    ? Results.Ok(forcast.ToResponse()) 
                     : Results.NotFound();
             })
             .WithName("GetDailyWeatherForecast")
