@@ -16,10 +16,15 @@ issues with markup - depends on
 1. Navigate to WeatherForcast.Client folder with WeatherForcast.Client.csproj file
 2. Execute command: dotnet run
 
-for Windows 10 machines all markup is broken when using first option 
+- starts with large scale 
+- reduce with mouse scroll to fix
 
 ### second option
 
 1. just use VS2022++
 
-then everithing ok
+then everything ok
+
+## enjoy
+
+1. enjoy
