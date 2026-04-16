@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using System.IO.Compression;
-using System.Net.Http.Json;
 using System.Text.Json;
 using WeatherForcast.Infrastructure.Http.Forcast.ProviderContracts;
 using WeatherForcast.Models;

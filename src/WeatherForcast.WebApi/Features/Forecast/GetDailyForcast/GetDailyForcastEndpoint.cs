@@ -68,8 +68,11 @@ public class GetDailyForcastEndpoint : IEndpoint
                         null, null, cancel),
                     linkedSource.Token);               
 
-                return forcast is not null ? Results.Ok(forcast) : Results.NotFound();
+                return forcast is not null 
+                    ? Results.Ok(forcast.Success()) 
+                    : Results.NotFound();
             })
-            .WithName("GetDailyWeatherForecast");
+            .WithName("GetDailyWeatherForecast")
+            .RequireCors("AllowAll");
 }
 

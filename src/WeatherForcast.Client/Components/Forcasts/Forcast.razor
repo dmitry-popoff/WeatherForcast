@@ -1,0 +1,28 @@
+﻿@using WeatherForcast.Models.Forcast
+<div class="card-body" style="background: transparent;">
+
+    <div class="d-flex justify-content-center align-items-center overflow-auto pb-3 text-center bg-opacity-50" style="background: transparent;">
+
+            <div class="px-3 border-2">
+            <h5 class="card-title text-center mb-4">Date: @DailyForcast.Date.ToShortDateString()</h5>
+            <p class="mb-1">Average Temperature: @DailyForcast.AverageForcast.TemperatureCelsiusAvg°C</p>
+            <p class="mb-1">Max Temperature: @DailyForcast.AverageForcast.TemperatureCelsiusMax°C</p>
+            <p class="mb-1">Min Temperature: @DailyForcast.AverageForcast.TemperatureCelsiusMin°C</p>
+            <p class="mb-1">Sunrise: <strong> @DailyForcast.Astro.SunriseTime</strong></p>
+            <p class="mb-1">Sunset: <strong> @DailyForcast.Astro.SunsetTime</strong></p>
+            </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    public DailyWeatherForcast DailyForcast { get; set; } = default!;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        StateHasChanged();
+    }
+
+}

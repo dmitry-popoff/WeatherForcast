@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using WeatherForcast.Models;
 
 namespace WeatherForcast.WebApi.Middleware;
 
@@ -20,16 +20,16 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
         _logger.LogError(
             exception, "Exception occurred: {Message}", exception.Message);
 
-        var problemDetails = new ProblemDetails
-        {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Server error"            
-        };
+        var problemDetails = new ErrorDetails
+        (            
+            "Server error",
+            StatusCodes.Status500InternalServerError.ToString()
+        );
 
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
         await httpContext.Response
-            .WriteAsJsonAsync(problemDetails, cancellationToken);
+            .WriteAsJsonAsync(problemDetails.ToResponse(), cancellationToken);
 
         return true;
     }

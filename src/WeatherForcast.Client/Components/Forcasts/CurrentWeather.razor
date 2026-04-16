@@ -1,0 +1,29 @@
+﻿@using WeatherForcast.Models.Forcast
+
+@if (Forcast is not null)
+{
+
+    <div class="card bg-light flex-fill text-white" style="border-radius: 40px;">
+        <div class="bg-image flex-fill" style="border-radius: 35px;">
+                        <img src="@Forcast.CurrentWeather.Condition.Icon"
+                             class="card-img" alt="weather" />
+                        <div class="mask" style="background-color: rgba(190, 216, 232, .5);"></div>
+                    </div>
+        <div class="card-img-overlay  text-dark flex-fill">
+                        <p class="mb-sm-1 ">
+                            Date: @Forcast.CurrentWeather.Time.ToShortDateString(),
+                            Time: @Forcast.CurrentWeather.Time.ToLongTimeString()
+                        </p>
+                        <p class="display-2 my-3">@Forcast.CurrentWeather.TemperatureCelsius°C</p>
+                        <p class="mb-1">Feels Like: <strong> @Forcast.CurrentWeather.FeelslikeCelsius°C</strong></p>
+                        <p class="mb-1">Wind speed: <strong> @Forcast.CurrentWeather.WindSpeedKmph Km/h</strong></p>
+                        <p class="mb-1">Cloudness: <strong> @Forcast.CurrentWeather.Cloudness %</strong></p>
+                        <h5>@Forcast.CurrentWeather.Condition.Text</h5>
+                    </div>
+                </div>
+
+}
+@code {
+    [CascadingParameter]
+    public ForcastModel Forcast { get; set; } = default!;
+}
